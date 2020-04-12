@@ -1,13 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { InvokeFunctionExpr } from '@angular/compiler';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Post } from '../post.model';
+import { PostsService } from '../posts.service';
+import { Subscribable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.css']
 })
-export class PostListComponent implements OnInit {
+export class PostListComponent implements OnInit,OnDestroy {
 
   // posts = [
   //   {
@@ -21,11 +22,25 @@ export class PostListComponent implements OnInit {
   //   }
   // ]
 
-  @Input() posts: Post[] = [];
-  constructor() { }
+  posts: Post[] = [];
+  private postsSub: Subscription
+
+  constructor(
+    public ps: PostsService
+  ) { }
 
   ngOnInit() {
-    
+    this.posts = this.ps.getPosts();
+    this.postsSub =  this.ps.getPostsUpdatedListener().subscribe((posts: Post[]) => {
+      this.posts = posts;
+    })
+  }
+
+
+  ngOnDestroy() {
+    if (this.postsSub) {
+      this.postsSub.unsubscribe();
+    }
   }
 
 }
