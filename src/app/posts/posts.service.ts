@@ -64,4 +64,21 @@ export class PostsService {
           this.postsUpdated.next([...this.posts]);
       })
   }
+
+  getPost(id: string) {
+    return {...this.posts.find(p => p.id === id)};
+  }
+
+  updatePost(id: string, post: Post) {
+    const postOb: Post = {
+      id: id,
+      title: post.title,
+      content: post.content
+    }
+
+    this.http.put(environment.api + '/api/posts/' + id, postOb)
+      .subscribe(res => {
+        console.log(res);
+      })
+  }
 }
