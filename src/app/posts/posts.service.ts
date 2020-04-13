@@ -26,7 +26,8 @@ export class PostsService {
           return {
             title: post.title,
             content: post.content,
-            id: post._id
+            id: post._id,
+            imagePath: post.imagePath
           };
         });
       }))
@@ -41,18 +42,29 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(post: Post) {
-    const postOb: Post = {
-      id: null,
-      title: post.title,
-      content: post.content
-    }
-    this.http.post<{ message: string, postId: string }>(environment.api + '/api/posts', post)
-      .subscribe(res => {
-        const id = res.postId;
-        console.log(id);
-        postOb.id = id;
-        this.posts.push(postOb);
+  addPost(title: string, content: string, image: string) {
+    // const postOb: Post = {
+    //   id: null,
+    //   title: post.title,
+    //   content: post.content
+    // }
+
+    const postData = new FormData();
+    postData.append('title', title);
+    postData.append('content', content);
+    postData.append('image', image, title);
+    this.http.post<{ message: string, post: Post }>(environment.api + '/api/posts', postData)
+      .subscribe(data => {
+        const post: Post = {
+          id: data.post.id,
+          title: title,
+          content: content,
+          imagePath: data.post.imagePath
+        }
+        // const id = res.postId;
+        // console.log(id);
+        // postOb.id = id;
+        this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
         this.router.navigate(['/'])
       });
@@ -76,7 +88,8 @@ export class PostsService {
     const postOb: Post = {
       id: id,
       title: post.title,
-      content: post.content
+      content: post.content,
+      imagePath: null
     }
 
     this.http.put(environment.api + '/api/posts/' + id, postOb)
