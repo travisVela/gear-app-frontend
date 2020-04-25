@@ -44,7 +44,11 @@ export class AuthService {
     this.http.post(environment.api + '/api/user/signup', authData)
       .subscribe(res => {
         console.log(res);
-      })
+        this.router.navigate(['/']);
+      }, error => {
+        console.log(error);
+        this.authStatusListener.next(false);
+      });
   }
 
   login(email: string, password: string) {
@@ -66,6 +70,9 @@ export class AuthService {
           this.saveAuthData(token, expirationDate, this.userId);
           this.router.navigate(['/']);
         }
+      }, error => {
+        console.log(error);
+        this.authStatusListener.next(false);
       })
   }
 
