@@ -27,11 +27,13 @@ export class PostsService {
             title: post.title,
             content: post.content,
             id: post._id,
-            imagePath: post.imagePath
+            imagePath: post.imagePath,
+            creator: post.creator
           };
         });
       }))
       .subscribe((data) => {
+        console.log(data);
         this.posts = data;
         this.postsUpdated.next([...this.posts]);
       })
@@ -59,7 +61,8 @@ export class PostsService {
           id: data.post.id,
           title: title,
           content: content,
-          imagePath: data.post.imagePath
+          imagePath: data.post.imagePath,
+          creator: null
         }
         // const id = res.postId;
         // console.log(id);
@@ -81,7 +84,7 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.http.get<{ _id: string, title: string, content:string, imagePath: string }>(environment.api + '/api/posts/' + id);
+    return this.http.get<{ _id: string, title: string, content:string, imagePath: string, creator: string }>(environment.api + '/api/posts/' + id);
   }
 
   updatePost(id: string, title: string, content: string, image: File | string) {
@@ -97,7 +100,8 @@ export class PostsService {
           id: id,
           title: title,
           content: content,
-          imagePath: image
+          imagePath: image,
+          creator: null
         }
       }
 
@@ -109,7 +113,8 @@ export class PostsService {
           id: id,
           title: title,
           content: content,
-          imagePath: ''
+          imagePath: '',
+          creator: null
         }
         updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;
