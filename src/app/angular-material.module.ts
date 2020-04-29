@@ -9,6 +9,8 @@ import {
     MatProgressSpinnerModule,
     MatDialogModule
   } from '@angular/material';
+  import { MatMenuModule } from '@angular/material/menu';
+  import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
 
@@ -19,7 +21,9 @@ import {
         MatToolbarModule,
         MatExpansionModule,
         MatProgressSpinnerModule,
-        MatDialogModule
+        MatDialogModule,
+        MatMenuModule,
+        MatIconModule
     ]
 
 })

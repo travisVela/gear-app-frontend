@@ -22,7 +22,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   isLoading = false;
   form: FormGroup;
   imagePreview: string;
-  private authStatusSub: Subscription
+  private authStatusSub: Subscription;
 
   constructor(
     public ps: PostsService,
@@ -52,7 +52,8 @@ export class PostCreateComponent implements OnInit, OnDestroy {
             title: res.title,
             content: res.content,
             imagePath: res.imagePath,
-            creator: res.creator
+            creator: res.creator,
+            creatorName: null
           };
           this.form.setValue({
             title: this.post.title,
@@ -77,7 +78,8 @@ export class PostCreateComponent implements OnInit, OnDestroy {
       title: this.form.value.title,
       content: this.form.value.content,
       imagePath: null,
-      creator:  null
+      creator:  null,
+      creatorName: null
     }
 
     if (this.mode === 'create') {

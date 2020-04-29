@@ -14,6 +14,9 @@ export class PostsService {
   private posts: Post[] = []
   private postsUpdated = new Subject<Post[]>();
 
+  creatorName: string;
+  creator: string;
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -28,7 +31,8 @@ export class PostsService {
             content: post.content,
             id: post._id,
             imagePath: post.imagePath,
-            creator: post.creator
+            creator: post.creator,
+            creatorName: post.creatorName
           };
         });
       }))
@@ -57,12 +61,16 @@ export class PostsService {
     postData.append('image', image, title);
     this.http.post<{ message: string, post: Post }>(environment.api + '/api/posts', postData)
       .subscribe(data => {
+        this.creator = data.post.creator;
+        this.creatorName = data.post.creatorName;
+
         const post: Post = {
           id: data.post.id,
           title: title,
           content: content,
           imagePath: data.post.imagePath,
-          creator: null
+          creator: data.post.creator,
+          creatorName: data.post.creatorName
         }
         // const id = res.postId;
         // console.log(id);
@@ -101,7 +109,8 @@ export class PostsService {
           title: title,
           content: content,
           imagePath: image,
-          creator: null
+          creator: this.creator,
+          creatorName: this.creatorName
         }
       }
 
@@ -114,7 +123,8 @@ export class PostsService {
           title: title,
           content: content,
           imagePath: '',
-          creator: null
+          creator: this.creator,
+          creatorName: this.creatorName
         }
         updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;
